@@ -38,29 +38,29 @@ def measure(path_to_warped_image_mini, lines):
 
         heart_line_points = [tuple(reversed(l[:2])) for l in heart_line]
         heart_line_tip = heart_line_points[0]
-        heart_content_1 = 'Love line governs all matters of the heart, including romance, friendship, and commitment.'
+        heart_content_1 = '감정선은 연애, 우정, 헌신 등 마음에 관한 모든 일을 관장합니다.'
         if heart_line_tip[0] < heart_thres_x:
-            heart_content_2 = 'Your Heart line is long, which means you will have long partnership with whom you love or care.'
+            heart_content_2 = '감정선이 깁니다. 사랑하거나 아끼는 사람과 오랜 관계를 맺게 됨을 의미합니다.'
         else:
-            heart_content_2 = 'Your Heart line is short, which means you will meet various people and have a broad range of relationships throughout your life.'
+            heart_content_2 = '감정선이 짧습니다. 평생 다양한 사람을 만나며 폭넓은 관계를 맺게 됨을 의미합니다.'
         draw.line(heart_line_points, fill="red", width=width)
 
         head_line_points = [tuple(reversed(l[:2])) for l in head_line]
         head_line_tip = head_line_points[-1]
-        head_content_1 = 'Head line tells us about our intellectual curiosities and pursuits.'
+        head_content_1 = '두뇌선은 지적 호기심과 탐구에 대해 알려줍니다.'
         if head_line_tip[0] > head_thres_x:
-            head_content_2 = 'Your Head line is long, which means you will explore a broad range of topics throughout your life.'
+            head_content_2 = '두뇌선이 깁니다. 평생 폭넓은 주제를 탐구하게 됨을 의미합니다.'
         else:
-            head_content_2 = 'Your Head line is short, which means you will be fascinated by one topic and dig deep into it.'
+            head_content_2 = '두뇌선이 짧습니다. 한 가지 주제에 매료되어 깊이 파고들게 됨을 의미합니다.'
         draw.line(head_line_points, fill="green", width=width)
 
         life_line_points = [tuple(reversed(l[:2])) for l in life_line]
         life_line_tip = life_line_points[-1]
-        life_content_1 = 'Life line reveals your experiences, vitality, and zest. Be careful, it has nothing to do with how long you will live!'
+        life_content_1 = '생명선은 당신의 경험, 활력, 열정을 드러냅니다. 주의하세요 — 수명의 길이와는 전혀 관련이 없습니다!'
         if life_line_tip[1] > life_thres_y:
-            life_content_2 = 'Your Life line is long, which means you tend to solve problems with other people rather than by yourself.'
+            life_content_2 = '생명선이 깁니다. 혼자보다는 다른 사람과 함께 문제를 해결하는 경향을 의미합니다.'
         else:
-            life_content_2 = 'Your Life line is short, which means you are independent and autonomous.'
+            life_content_2 = '생명선이 짧습니다. 독립적이고 자율적임을 의미합니다.'
         draw.line(life_line_points, fill="blue", width=width)
 
         # draw.line([(heart_thres_x, 0), (heart_thres_x, image_height)], fill="red")

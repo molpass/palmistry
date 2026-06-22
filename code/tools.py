@@ -1,8 +1,13 @@
 import numpy as np
 from PIL import Image
+import matplotlib
 import matplotlib.pyplot as plt
 import cv2
 from pillow_heif import register_heif_opener
+
+# 결과 이미지에 한국어 라벨이 깨지지 않도록 한글 폰트를 설정한다(설치된 첫 폰트 사용).
+matplotlib.rcParams['font.family'] = ['Malgun Gothic', 'AppleGothic', 'NanumGothic', 'sans-serif']
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 def heic_to_jpeg(heic_dir, jpeg_dir):
     register_heif_opener()  
@@ -48,18 +53,18 @@ def save_result(im, contents, resize_value, path_to_result):
             labelleft=False
         )
 
-        note_1 = '* Note: This program is just for fun! Please take the result with a light heart.'
-        note_2 = '   If you want to check out more about palmistry, we recommend https://www.allure.com/story/palm-reading-guide-hand-lines'
-        
-        plt.title(' Check your palmistry result!', fontsize=14, y=1.01)
+        note_1 = '* 참고: 이 프로그램은 그저 재미를 위한 것입니다! 결과는 가벼운 마음으로 받아들여 주세요.'
+        note_2 = '   손금에 대해 더 알아보고 싶다면 https://www.allure.com/story/palm-reading-guide-hand-lines 를 추천합니다'
 
-        plt.text(image_width + 15, 15, "<Heart line>", color='r', fontsize=fontsize)
+        plt.title(' 손금 분석 결과를 확인하세요!', fontsize=14, y=1.01)
+
+        plt.text(image_width + 15, 15, "<감정선>", color='r', fontsize=fontsize)
         plt.text(image_width + 15, 35, heart_content_1, fontsize=fontsize)
         plt.text(image_width + 15, 55, heart_content_2, fontsize=fontsize)
-        plt.text(image_width + 15, 80, "<Head line>", color='g', fontsize=fontsize)
+        plt.text(image_width + 15, 80, "<두뇌선>", color='g', fontsize=fontsize)
         plt.text(image_width + 15, 100, head_content_1, fontsize=fontsize)
         plt.text(image_width + 15, 120, head_content_2, fontsize=fontsize)
-        plt.text(image_width + 15, 145, "<Life line>", color='b', fontsize=fontsize)
+        plt.text(image_width + 15, 145, "<생명선>", color='b', fontsize=fontsize)
         plt.text(image_width + 15, 165, life_content_1, fontsize=fontsize)
         plt.text(image_width + 15, 185, life_content_2, fontsize=fontsize)
 
@@ -70,4 +75,4 @@ def save_result(im, contents, resize_value, path_to_result):
         plt.savefig(path_to_result, bbox_inches = "tight")
 
 def print_error():
-    print('Palm lines not properly detected! Please use another palm image.')
+    print('손금 선이 제대로 검출되지 않았습니다! 다른 손바닥 이미지를 사용해 주세요.')

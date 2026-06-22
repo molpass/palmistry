@@ -47,7 +47,7 @@ def group(img):
             
             # error handling: true only the assumption was false
             if len(next_pos) != 1 :
-                print("multiple lines available")
+                print("여러 개의 선이 검출됨")
                 break
             
             # update line
