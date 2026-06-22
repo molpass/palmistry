@@ -1,18 +1,15 @@
 # Fortune On Your Hand: View-Invariant Machine Palmistry
-
-> 🇰🇷 이 저장소는 **molpass가 포크한 사본**입니다. 영어 원문은 [README.en.md](./README.en.md)를 참고하세요. (아래는 한국어 번역본이며, 원문에 이미 한국어로 작성되어 있던 구현 노트는 그대로 유지했습니다.)
-
-## 요약
-저희의 *손금 주요선 검출 소프트웨어*는 아래 4단계로 구현되어 있습니다. 핵심 과제는 **촬영 방향**과 **조명**에 관계없이 손바닥의 주요선을 읽어내는 것이었습니다:
-1) 기울어진 손바닥 이미지를 워핑(warping)
-2) 손바닥의 주요선 검출
-3) 선 분류
-4) 각 선의 길이 측정
+## Summary
+Our *Palmistry principal lines detection software* is implemented by 4 steps below. Our main challenge was to read the principal lines on a palm regardless of the **view direction** and **illumination**:   
+1) Warping a tilted palm image  
+2) Detecting principal lines on a palm  
+3) Classifying the lines  
+4) Measuring the length of each line  
 <img width="1362" alt="model_architecture" src="https://user-images.githubusercontent.com/81272473/208795260-48ba6c8f-92a1-4b01-9471-6a4703ad0aff.png">
-손바닥 이미지 정렬(rectification)에는 MediaPipe로 관심점(interest points)을 추출하고 그 점들로 워핑을 구현했습니다. 주요선 검출을 위해서는 딥러닝 모델을 구축하고 손바닥 이미지 데이터셋으로 학습시켰습니다. 선 분류에는 K-means 클러스터링을 사용해 각 픽셀을 특정 선에 할당했습니다. 길이 측정에는 MediaPipe로 얻은 랜드마크를 이용해 각 주요선에 대한 임계값(threshold)을 설정했습니다.
+For palm image rectification, we used MediaPipe to extract interest points and implemented warping with the points. For principal line detection, we built a deep learning model and trained the model with palm image dataset. For line classification, we used K-means clustering to allocate each pixel to specific line. For length measurement, we set a threshold for each principal line with the landmarks obtained by MediaPipe.
 
-## 실행 환경
-코드는 Python 3.7.6 기준으로 작성되었습니다. 실행에 필요한 요구사항은 다음과 같습니다:
+## Environment
+The codes are written based on Python 3.7.6. These are the requirements for running the codes:
 - torch
 - torchvision
 - scikit-image
@@ -20,22 +17,22 @@
 - pillow-heif
 - mediapipe
 
-요구사항을 설치하려면 `pip install -r ./code/requirements.txt` 를 실행하세요.
+In order to install the requirements, run `pip install -r ./code/requirements.txt`.
 
-## 실행
-1. 코드를 실행하기 전에, **입력용 손바닥 이미지(.heic 또는 .jpg)** 를 `./code/inputs` 디렉터리에 준비해야 합니다. 네 개의 샘플 입력을 제공합니다.
-2. 아래 명령으로 `read_palm.py` 를 실행합니다. 실행 후 결과 파일은 `./code/results` 디렉터리에 저장됩니다.
+## Run
+1. Before running the codes, **a palm image for input(.heic or .jpg)** should be prepared in the `./code/inputs` directory. We provided four sample inputs.
+2. Run `read_palm.py` by the command below. After running the code, result files will be saved in the `./code/results` directory.
 ```bash
 > python ./code/read_palm.py --input [filename].[jpg, heic]
 ```
 
-## 결과
+## Results
 <img width="1371" alt="standard" src="https://user-images.githubusercontent.com/81272473/208797334-9cf56f18-01b1-46e5-9bab-5a38a696d05f.png">
 <img width="1361" alt="tilted" src="https://user-images.githubusercontent.com/81272473/208797357-fe007daf-0d24-48b0-80af-21d79b64db4a.png">
 
-## 선분(Line Segment) 구현
-업데이트: 22.12.03 21:57
-- 가정
+## Line Segment implementation
+Update: 22.12.03 21:57
+- Assumption
   - line이 image의 테두리까지 가는 경우가 없음 (이 경우 scikit의 skeletonize가 종종 안됨. skeletonize 되더라도 grouping 알고리즘 조금 수정 필요)
   - 선들이 교차하는 점은 최대 하나 (test case에 따랐음. 약간의 추가 구현으로 처리 가능하기는 함)
 
@@ -44,7 +41,7 @@
   ```
   example : [ [[1, 2], [2, 3]], [[10, 11], [11, 11]] ]
   ```
-
+  
   - explanation of implementation
     1. 전체 픽셀에 대해 둘레 8픽셀 중 0이 아닌 값을 count
     2. count 결과물은 0: 선 위에 없음, 1: 선의 끝, 2: 선의 중간, 3: 선의 교차점으로 구분됨
@@ -53,7 +50,7 @@
     5. 1인 pixel이면 line을 하나 찾은 것이므로 저장하고 역방향 탐색이 되지 않도록 for문에서 제외. 3인 pixel은 line을 따로 저장해놨다가 추후 조치
     6. 3으로 끝난 line들끼리 이을 수 있나 확인: 시작점, 끝점 차이 확인해서 방향이 반대인 모든 조합들을 이어서 line에 저장
     7. 저장한 line들을 return
-
-## 이슈(Issues)
+    
+## Issues
   - skeletonize가 붙어있지 않던 선을 붙이는 경우 있음 (1 case, 선 하나가 약간 길게 나오게 됨) -> 추가 test 필요
   - 끊어진 라인 처리가 애매함 : 현재는 무시하고 진행한 상태, grouping된 선들 gradient 계산하면 할 수야 있기는 한데 잘못하면 이상한 선들끼리 이어질 수 있음. 이런 케이스를 숨기는게 좋아보이긴 함...
